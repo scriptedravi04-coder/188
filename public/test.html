@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<body>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+  const api = axios.create({ baseURL: '/api' });
+  const originalGet = api.get;
+  api.get = async function(url, config) {
+    return originalGet.apply(this, arguments);
+  };
+  
+  api.get('admin/verifications').then(res => {
+    console.log("Success:", res.data);
+    fetch('/log?url=' + encodeURIComponent(res.config.url) + '&baseURL=' + encodeURIComponent(res.config.baseURL));
+  }).catch(err => {
+    console.error("Error:", err);
+  });
+</script>
+</body>
+</html>

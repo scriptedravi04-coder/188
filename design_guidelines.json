@@ -1,0 +1,134 @@
+{
+  "theme": "Light",
+  "archetype": "Archetype 4 (Swiss & High-Contrast)",
+  "emotional_tone": "Trustworthy, Transparent, Bold, Data-Forward",
+  "design_philosophy": "A premium, transparent marketplace for Bharat creators. We use high-contrast data visualization to build trust. No generic SaaS aesthetics. The creator is the hero, and data (engagement, pricing) is the truth.",
+  "colors": {
+    "background": {
+      "base": "#F7F5F2",
+      "surface": "#FFFFFF",
+      "surface_elevated": "#FFFFFF"
+    },
+    "text": {
+      "primary": "#0A0A0A",
+      "secondary": "#525252",
+      "tertiary": "#A3A3A3"
+    },
+    "brand": {
+      "primary": "#E84A27",
+      "primary_hover": "#C83E1D",
+      "accent": "#1A4331",
+      "accent_hover": "#133124"
+    },
+    "status": {
+      "success": "#1A4331",
+      "warning": "#F59E0B",
+      "error": "#DC2626",
+      "info": "#2563EB"
+    },
+    "borders": {
+      "default": "#E5E5E5",
+      "focus": "#E84A27"
+    }
+  },
+  "typography": {
+    "fonts": {
+      "headings": "'Cabinet Grotesk', sans-serif",
+      "body": "'IBM Plex Sans', sans-serif",
+      "mono": "'JetBrains Mono', monospace"
+    },
+    "scale": {
+      "h1": "text-5xl sm:text-6xl tracking-tight leading-none font-black",
+      "h2": "text-4xl sm:text-5xl tracking-tight leading-tight font-bold",
+      "h3": "text-2xl sm:text-3xl tracking-tight font-bold",
+      "h4": "text-xl sm:text-2xl tracking-tight font-semibold",
+      "body_lg": "text-lg leading-relaxed",
+      "body_base": "text-base leading-relaxed",
+      "body_sm": "text-sm leading-normal",
+      "label": "text-xs tracking-[0.2em] uppercase font-semibold"
+    }
+  },
+  "layout_and_spacing": {
+    "container_padding": "px-6 md:px-12 lg:px-24",
+    "section_spacing": "py-20 md:py-32",
+    "grid_modes": {
+      "marketing": "grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12",
+      "dashboard": "grid grid-cols-1 md:grid-cols-4 gap-6",
+      "creator_profile": "grid grid-cols-1 md:grid-cols-3 gap-8"
+    },
+    "surfaces": {
+      "card_dashboard": "bg-white border border-[#E5E5E5] rounded-xl p-6 hover:-translate-y-1 hover:shadow-lg transition-all duration-300",
+      "card_creator": "bg-white border border-[#E5E5E5] rounded-2xl overflow-hidden hover:border-[#E84A27] transition-colors duration-300",
+      "glass_header": "bg-white/80 backdrop-blur-xl border-b border-[#E5E5E5]"
+    }
+  },
+  "components": {
+    "buttons": {
+      "primary": "bg-[#E84A27] text-white px-6 py-3 rounded-none font-semibold hover:bg-[#C83E1D] transition-colors flex items-center justify-center",
+      "secondary": "bg-transparent border border-[#0A0A0A] text-[#0A0A0A] px-6 py-3 rounded-none font-semibold hover:bg-[#0A0A0A] hover:text-white transition-colors flex items-center justify-center",
+      "outline": "bg-white border-2 border-[#E84A27] text-[#E84A27] px-6 py-3 rounded-none font-semibold hover:bg-[#E84A27] hover:text-white transition-colors"
+    },
+    "filters": {
+      "container": "w-full md:w-72 flex-shrink-0 border-r border-[#E5E5E5] pr-6",
+      "accordion": "Use Shadcn Accordion. Customize with pure black text, sharp borders.",
+      "checkbox": "Use Shadcn Checkbox. Focus ring should be #E84A27."
+    },
+    "data_visualization": {
+      "guideline": "Use large typography for metrics. 'Engagement Rate: 8.4%' should have '8.4%' in text-4xl Cabinet Grotesk. Use Recharts for ROI tracking lines."
+    },
+    "badges": {
+      "verified": "bg-[#1A4331]/10 text-[#1A4331] px-2 py-1 rounded-full text-xs font-semibold flex items-center gap-1",
+      "category": "bg-[#F7F5F2] border border-[#E5E5E5] text-[#525252] px-3 py-1 rounded-full text-xs font-medium"
+    }
+  },
+  "motion_and_interactions": {
+    "hover_states": "All interactive elements MUST have visible hover states. Elevate cards slightly (-translate-y-1).",
+    "page_transitions": "Use Framer Motion for staggered fade-in up on lists (like creator search results).",
+    "scrolling": "Use Lenis for smooth momentum scrolling on marketing pages."
+  },
+  "accessibility_and_testing": {
+    "contrast": "Ensure all text meets minimum 4.5:1 ratio against background. Brand primary #E84A27 is high contrast on white.",
+    "testing_attributes": "All buttons, links, inputs, and major UI nodes MUST have `data-testid` (e.g., `data-testid=\"brand-login-button\"`)."
+  },
+  "icons_and_assets": {
+    "icon_library": "lucide-react for functional UI, @phosphor-icons/react (Duotone) for marketing sections.",
+    "image_urls": [
+      {
+        "category": "creator_portraits",
+        "url": "https://images.unsplash.com/photo-1633346683707-25c5b6ead885?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1OTN8MHwxfHNlYXJjaHwyfHxtb2Rlcm4lMjBpbmRpYW4lMjBwb3J0cmFpdHxlbnwwfHx8fDE3ODEwMDE1ODZ8MA&ixlib=rb-4.1.0&q=85",
+        "description": "Creator profile placeholder 1 (Tech/Finance)"
+      },
+      {
+        "category": "creator_portraits",
+        "url": "https://images.unsplash.com/photo-1536766768598-e09213fdcf22?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2MzR8MHwxfHNlYXJjaHwyfHxpbmRpYW4lMjBjcmVhdG9yJTIwcG9ydHJhaXR8ZW58MHx8fHwxNzgxMDAxNTgwfDA&ixlib=rb-4.1.0&q=85",
+        "description": "Creator profile placeholder 2 (Lifestyle/Fashion)"
+      },
+      {
+        "category": "creator_portraits",
+        "url": "https://images.unsplash.com/photo-1759840278511-f73a3d62fb9f?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1OTN8MHwxfHNlYXJjaHwzfHxtb2Rlcm4lMjBpbmRpYW4lMjBwb3J0cmFpdHxlbnwwfHx8fDE3ODEwMDE1ODZ8MA&ixlib=rb-4.1.0&q=85",
+        "description": "Creator profile placeholder 3 (Vlog/Comedy)"
+      },
+      {
+        "category": "brand_logos",
+        "url": "https://images.unsplash.com/photo-1622465911368-72162f8da3e2?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NTYxODd8MHwxfHNlYXJjaHwyfHxjb21wYW55JTIwYnJhbmQlMjBsb2dvfGVufDB8fHx8MTc4MTAwMTU4NXww&ixlib=rb-4.1.0&q=85",
+        "description": "Brand partner logo placeholder"
+      },
+      {
+        "category": "brand_logos",
+        "url": "https://images.unsplash.com/photo-1773844914284-498c0e049b36?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NTYxODd8MHwxfHNlYXJjaHw0fHxjb21wYW55JTIwYnJhbmQlMjBsb2dvfGVufDB8fHx8MTc4MTAwMTU4NXww&ixlib=rb-4.1.0&q=85",
+        "description": "Brand partner logo placeholder"
+      }
+    ]
+  },
+  "specific_page_instructions": {
+    "landing_page": "Hero section must use massive typography (Cabinet Grotesk) explaining the 'Transparent Influencer Marketplace' USP. Use bento-style feature blocks for 'Rate Card Transparency' and 'Verified Performance'. Do not use pure white background, use #F7F5F2.",
+    "search_discovery": "Sidebar left for 24+ filters. Main area uses Mode B 'Control Room' grid for creator cards. Each card must prominently display the creator's Rate Card, Engagement Score, and Top % Badge.",
+    "creator_profile": "Split layout. Left: Sticky creator photo + quick actions (Collab/Connect). Right: Deep dive into performance data, past brands, and detailed rate card. Use #1A4331 for positive ROI metrics.",
+    "dashboards": "Strict Mode B 'Control Room' grids. Dense data. Use Shadcn components for tables and lists, keeping borders sharp (#E5E5E5) and avoiding heavy card shadows unless hovered."
+  },
+  "development_rules": {
+    "framework": "React (.js, not .tsx), Tailwind CSS, Shadcn UI primitives.",
+    "icons": "yarn add @phosphor-icons/react lucide-react",
+    "routing": "Ensure Google OAuth and Email/Password auth flows have dedicated, styled pages that match the brand archetype."
+  }
+}

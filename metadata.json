@@ -1,0 +1,8 @@
+{
+  "name": "Version-105",
+  "description": "Imported from GitHub: scriptedravi04-coder/version-104",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
