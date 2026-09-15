@@ -20,6 +20,22 @@ import NotificationBell from "../shared/NotificationBell";
 import TrustedBrandsWidget from "./TrustedBrandsWidget";
 import TrustBadgeRotator from "../TrustBadgeRotator";
 
+
+const brandHeroBannersList = [
+  {
+    id: "b1",
+    title: "Launch UGC Campaigns",
+    image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=600&auto=format&fit=crop",
+    link: "/campaigns/create"
+  },
+  {
+    id: "b2",
+    title: "Discover Creators",
+    image: "https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?q=80&w=600&auto=format&fit=crop",
+    link: "/explore"
+  }
+];
+
 // Numeric helper
 const formatNumber = (num) => {
   if (num >= 1000) return (num / 1000).toFixed(1).replace(/\.0$/, '') + 'K';
@@ -504,13 +520,15 @@ export default function BrandDashboard({ user }) {
     return () => clearInterval(interval);
   }, [importantTasks.length]);
 
+  const displayBanners = banners.length > 0 ? banners : brandHeroBannersList;
+
   useEffect(() => {
-    if (banners.length <= 1) return;
+    if (displayBanners.length <= 1) return;
     const interval = setInterval(() => {
-      setCurrentBannerIdx((prev) => (prev + 1) % banners.length);
+      setCurrentBannerIdx((prev) => (prev + 1) % displayBanners.length);
     }, 6000);
     return () => clearInterval(interval);
-  }, [banners.length]);
+  }, [displayBanners.length]);
 
   // GSAP Entrance
   useEffect(() => {
@@ -617,6 +635,7 @@ export default function BrandDashboard({ user }) {
               ) : (
                 <Badge variant="warning">KYC Unverified</Badge>
               )}
+  
               <TrustBadgeRotator page="brandDashboard" className="hidden md:block" />
             </div>
           </div>
@@ -690,11 +709,12 @@ export default function BrandDashboard({ user }) {
       {/* HERO BANNER SECTION (lg-span-3) + IMPORTANT FOR YOU (lg-span-1) */}
       <div className="flex flex-col lg:grid lg:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8 relative z-10 gsap-reveal">
         
-        {/* Left: Auto-rotating brand marketing carousel (hidden completely if zero active banners) */}
-        {banners.length > 0 && (
-          <div className="lg:col-span-3">
-            <div className="bg-[var(--bg-card)] rounded-[16px] lg:rounded-[24px] relative overflow-hidden flex flex-col justify-center border border-[var(--border-default)] h-[105px] md:h-[200px] lg:h-[280px] w-full group shadow-md">
-               {banners.map((banner, idx) => {
+        {/* Left: Auto-rotating brand marketing carousel (shows empty placeholder if zero active banners) */}
+        <div className="lg:col-span-3">
+          <div className="bg-[var(--bg-card)] rounded-[16px] lg:rounded-[24px] relative overflow-hidden flex flex-col justify-center border border-[var(--border-default)] h-[105px] md:h-[200px] lg:h-[280px] w-full group shadow-md">
+             
+               <>
+               {(banners.length > 0 ? banners : brandHeroBannersList).map((banner, idx) => {
                  const ctaUrl = banner.cta_url || banner.link_url || banner.link;
                  const hasLink = Boolean(ctaUrl && ctaUrl !== "#");
                  const isCurrent = idx === currentBannerIdx;
@@ -723,9 +743,9 @@ export default function BrandDashboard({ user }) {
                })}
                
                {/* Slider Dots */}
-               {banners.length > 1 && (
+               {(banners.length > 0 ? banners : brandHeroBannersList).length > 1 && (
                  <div className="absolute bottom-2 sm:bottom-4 left-4 md:left-10 flex items-center gap-1.5 z-20">
-                   {banners.map((_, idx) => (
+                   {(banners.length > 0 ? banners : brandHeroBannersList).map((_, idx) => (
                      <button 
                        key={idx}
                        onClick={(e) => {
@@ -739,12 +759,13 @@ export default function BrandDashboard({ user }) {
                    ))}
                  </div>
                )}
-            </div>
+               </>
+ 
           </div>
-        )}
+        </div>
 
         {/* Right: Important for You brand console task loop card */}
-        <div className={`hidden sm:flex ${banners.length > 0 ? "lg:col-span-1" : "lg:col-span-4"} bg-white rounded-[20px] p-3 sm:p-6 border border-[var(--border-default)] flex-col md:h-[200px] lg:h-[280px] relative w-full`}>
+        <div className="hidden sm:flex lg:col-span-1 bg-white rounded-[20px] p-3 sm:p-6 border border-[var(--border-default)] flex-col md:h-[200px] lg:h-[280px] relative w-full">
           <div className="mb-3 sm:mb-0 shrink-0">
             <h4 className={'text-sm sm:text-base font-bold'}>
               Important For You
@@ -844,9 +865,11 @@ export default function BrandDashboard({ user }) {
                                   ) : (
                                      <Minus size={8} />
                                   )}
+                      
                                   <span>{s.trendInfo.trend}</span>
                                </span>
-                            )}
+                           )}
+                
                         </motion.div>
                      );
                   })()}
@@ -930,6 +953,7 @@ export default function BrandDashboard({ user }) {
                    ) : (
                      <Minus size={10} />
                    )}
+       
                    <span>{s.trendInfo.trend}</span>
                    {s.trendInfo.trendValue && <span className="opacity-75 ml-0.5">({s.trendInfo.trendValue})</span>}
                  </div>
@@ -1026,6 +1050,7 @@ export default function BrandDashboard({ user }) {
                             {item.creator_name?.charAt(0).toUpperCase()}
                           </div>
                         )}
+            
                         <div>
                           <div className="flex items-center gap-1.5">
                             <span className="font-bold text-sm text-[var(--text-primary)] leading-tight">

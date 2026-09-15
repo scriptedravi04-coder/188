@@ -814,126 +814,35 @@ export function setupPaymentRoutes(
       return res.status(500).json({ error: err.message || "Razorpay is not configured on the server." });
     }
 
-    // Verify / recompute amount server-side against actual database records
+    
+    
     let verifiedGrossAmount = Number(gross_amount) || 0;
-    let targetCreatorId = creator_id || null;
-    let targetBrandId = user.user_id;
-
-    if (supabase) {
-      try {
-        if (deal_id) {
-          if (deal_id.startsWith("ugcord_")) {
-            const { data: uOrder } = await supabase.from('ugc_orders').select('*').eq('id', deal_id).maybeSingle();
-            if (uOrder) {
-              const dbAmt = Number(uOrder.creator_payout || uOrder.escrow_amount || uOrder.agreed_amount || uOrder.budget);
-              if (dbAmt > 0) verifiedGrossAmount = dbAmt;
-              if (uOrder.creator_id) targetCreatorId = uOrder.creator_id;
-              if (uOrder.brand_id) targetBrandId = uOrder.brand_id;
-            }
-          } else {
-            const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(deal_id);
-            if (isUuid) {
-              const { data: dealRec } = await supabase.from('deals').select('*').eq('id', deal_id).maybeSingle();
-              if (dealRec) {
-                const dbAmt = Number(dealRec.agreed_amount || dealRec.amount_fixed || dealRec.budget || dealRec.gross_amount);
-                if (dbAmt > 0) verifiedGrossAmount = dbAmt;
-                if (dealRec.creator_id) targetCreatorId = dealRec.creator_id;
-                if (dealRec.brand_id || dealRec.brand_user_id) targetBrandId = dealRec.brand_id || dealRec.brand_user_id;
-              }
-            }
-            if (!verifiedGrossAmount || verifiedGrossAmount <= 0) {
-              const { data: uOrder } = await supabase.from('ugc_orders').select('*').eq('id', deal_id).maybeSingle();
-              if (uOrder) {
-                const dbAmt = Number(uOrder.creator_payout || uOrder.escrow_amount || uOrder.agreed_amount || uOrder.budget);
-                if (dbAmt > 0) verifiedGrossAmount = dbAmt;
-                if (uOrder.creator_id) targetCreatorId = uOrder.creator_id;
-                if (uOrder.brand_id) targetBrandId = uOrder.brand_id;
-              }
-            }
-          }
-        }
-
-        if (thread_id && (!verifiedGrossAmount || verifiedGrossAmount <= 0)) {
-          const { data: threadRec } = await supabase.from('chat_threads').select('*').eq('id', thread_id).maybeSingle();
-          if (threadRec) {
-            const parsed = parseThreadState(threadRec);
-            const dbAmt = Number(threadRec.agreed_amount || threadRec.amount_fixed || parsed.amount_fixed || parsed.gross_amount);
-            if (dbAmt > 0) verifiedGrossAmount = dbAmt;
-            if (threadRec.creator_id) targetCreatorId = threadRec.creator_id;
-            if (threadRec.brand_id) targetBrandId = threadRec.brand_id;
-          }
-        }
-
-        if (brief_id && (!verifiedGrossAmount || verifiedGrossAmount <= 0)) {
-          const { data: briefRec } = await supabase.from('ugc_briefs').select('*').eq('id', brief_id).maybeSingle();
-          if (briefRec) {
-            const dbAmt = Number(briefRec.budget || briefRec.amount);
-            if (dbAmt > 0) verifiedGrossAmount = dbAmt;
-          }
-        }
-      } catch (dbErr) {
-        console.warn("[Razorpay create-order] Supabase lookup error:", dbErr);
-      }
-    }
-
-    if (!verifiedGrossAmount || verifiedGrossAmount <= 0) {
-      return res.status(400).json({ error: "Invalid payment amount. Please specify a valid deal amount." });
-    }
-
-    const amountInPaise = Math.round(verifiedGrossAmount * 100);
-    const identifier = (deal_id || thread_id || brief_id || "deal").replace(/[^a-zA-Z0-9_]/g, "").slice(0, 10);
-    const receipt = `rcpt_${identifier}_${Date.now().toString().slice(-6)}`;
-
     try {
-      const order = await rzp.orders.create({
-        amount: amountInPaise,
+      const options = {
+        amount: Math.round(verifiedGrossAmount * 100),
+
         currency: "INR",
-        receipt: receipt,
-        notes: {
-          deal_id: deal_id || "",
-          thread_id: thread_id || "",
-          campaign_id: campaign_id || "",
-          brief_id: brief_id || "",
-          creator_id: targetCreatorId || "",
-          brand_id: targetBrandId || "",
-          user_id: user.user_id || ""
-        }
-      });
-
-      const transactionId = `txn_${crypto.randomUUID()}`;
-
+        receipt: `rcpt_${Date.now()}`
+      };
+      
+      const order = await rzp.orders.create(options);
+      
       return res.json({
-        order_id: order.id,
+        success: true,
         key_id: process.env.RAZORPAY_KEY_ID,
+        order_id: order.id,
         amount: order.amount,
-        currency: order.currency || "INR",
-        transaction_id: transactionId,
-        is_test_mode: Boolean((process.env.RAZORPAY_KEY_ID || "").startsWith("rzp_test_")),
-        user_name: user.name || "Brand Partner",
-        user_email: user.email || "brand@example.com",
+        currency: order.currency,
+        user_name: user.name || "Brand User",
+        user_email: user.email || "",
         user_phone: user.phone || ""
       });
     } catch (err: any) {
-      console.error("[Razorpay create-order] Failed to create Razorpay order:", err);
-      return res.status(500).json({ error: err?.error?.description || err?.message || "Failed to create Razorpay order." });
+      console.error("[Razorpay Create Order] Error:", err);
+      return res.status(500).json({ error: err.message || "Failed to create Razorpay order." });
     }
   });
 
-
-
-  /**
-   * Core escrow-payment persistence logic, shared by /verify, /check-status,
-   * and /test-complete so all three paths do the SAME real database work —
-   * fixing a race condition where UPI payments (which resolve via the
-   * read-only /check-status poll before Razorpay's own handler() callback
-   * ever fires) were being treated as "successful" on the frontend without
-   * ever actually calling /verify, so the deal/thread never got marked
-   * ACTIVE in the database.
-   *
-   * Idempotent: if a transaction for this razorpay_order_id already exists,
-   * this returns early without re-processing, so it's safe to call this
-   * from multiple trigger points for the same payment.
-   */
   async function persistEscrowPayment({
     razorpay_order_id,
     razorpay_payment_id,
@@ -952,7 +861,6 @@ export function setupPaymentRoutes(
     let dealUpdateError: string | null = null;
     let threadUpdateError: string | null = null;
 
-    // Idempotency check: has this exact order already been recorded?
     if (supabase && razorpay_order_id) {
       try {
         const { data: existingTxn } = await supabase
@@ -974,18 +882,22 @@ export function setupPaymentRoutes(
 
     if (supabase) {
       try {
-        if (deal_id) {
-          if (deal_id.startsWith("ugcord_")) {
-            const { data: uOrder } = await supabase.from('ugc_orders').select('*').eq('id', deal_id).maybeSingle();
+        let checkDealId = deal_id || thread_id;
+        if (checkDealId && checkDealId.startsWith("thread_camp_")) {
+          checkDealId = checkDealId.replace("thread_camp_", "");
+        }
+        if (checkDealId) {
+          if (checkDealId.startsWith("ugcord_")) {
+            const { data: uOrder } = await supabase.from('ugc_orders').select('*').eq('id', checkDealId).maybeSingle();
             if (uOrder) {
               grossAmount = Number(uOrder.creator_payout || uOrder.escrow_amount || uOrder.agreed_amount || uOrder.budget) || 0;
               if (uOrder.creator_id) targetCreatorId = uOrder.creator_id;
               if (uOrder.brand_id) targetBrandId = uOrder.brand_id;
             }
           } else {
-            const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(deal_id);
+            const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(checkDealId);
             if (isUuid) {
-              const { data: dealRec } = await supabase.from('deals').select('*').eq('id', deal_id).maybeSingle();
+              const { data: dealRec } = await supabase.from('deals').select('*').eq('id', checkDealId).maybeSingle();
               if (dealRec) {
                 grossAmount = Number(dealRec.agreed_amount || dealRec.amount_fixed || dealRec.budget || dealRec.gross_amount) || 0;
                 if (dealRec.creator_id) targetCreatorId = dealRec.creator_id;
@@ -993,7 +905,7 @@ export function setupPaymentRoutes(
               }
             }
             if (!grossAmount) {
-              const { data: uOrder } = await supabase.from('ugc_orders').select('*').eq('id', deal_id).maybeSingle();
+              const { data: uOrder } = await supabase.from('ugc_orders').select('*').eq('id', checkDealId).maybeSingle();
               if (uOrder) {
                 grossAmount = Number(uOrder.creator_payout || uOrder.escrow_amount || uOrder.agreed_amount || uOrder.budget) || 0;
                 if (uOrder.creator_id) targetCreatorId = uOrder.creator_id;
@@ -1002,7 +914,6 @@ export function setupPaymentRoutes(
             }
           }
         }
-
         if (thread_id && (!grossAmount || grossAmount <= 0)) {
           const { data: threadRec } = await supabase.from('chat_threads').select('*').eq('id', thread_id).maybeSingle();
           if (threadRec) {
@@ -1018,6 +929,7 @@ export function setupPaymentRoutes(
     }
 
     if (!grossAmount || grossAmount <= 0) {
+
       try {
         const rzp = getRazorpay();
         const rzpOrder = await rzp.orders.fetch(razorpay_order_id);
@@ -1038,11 +950,17 @@ export function setupPaymentRoutes(
       try {
         let validDealId: string | null = null;
         let validUgcOrderId: string | null = null;
+        
         const candidateId = deal_id || thread_id;
-
         if (candidateId) {
           if (candidateId.startsWith("ugcord_")) {
             validUgcOrderId = candidateId;
+          } else if (candidateId.startsWith("thread_camp_")) {
+            const extracted = candidateId.replace("thread_camp_", "");
+            const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(extracted);
+            if (isUuid) {
+              validDealId = extracted;
+            }
           } else {
             const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(candidateId);
             if (isUuid) {
@@ -1056,14 +974,20 @@ export function setupPaymentRoutes(
           }
         }
 
+        
         if (!validDealId && !validUgcOrderId && deal_id) {
-          const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(deal_id);
-          if (isUuid) validDealId = deal_id;
-          else validUgcOrderId = deal_id;
+          let checkFallback = deal_id;
+          if (checkFallback.startsWith("thread_camp_")) checkFallback = checkFallback.replace("thread_camp_", "");
+          const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(checkFallback);
+          if (isUuid) validDealId = checkFallback;
+          else validUgcOrderId = checkFallback;
         }
+
 
         const txnId = crypto.randomUUID();
         const hasValidSource = (Boolean(validDealId) !== Boolean(validUgcOrderId));
+        
+console.log('Valid Source:', { validDealId, validUgcOrderId, hasValidSource, deal_id, candidateId });
 
         if (hasValidSource) {
           const { error: insErr } = await (privilegedSupabase || supabase).from('transactions').insert({
@@ -1076,15 +1000,13 @@ export function setupPaymentRoutes(
             creator_net_amount: creatorNet,
             gst_amount: gstAmount,
             zaakpay_order_id: razorpay_order_id,
-            razorpay_payment_id: razorpay_payment_id || null,
+            
             status: 'SUCCESS',
             payout_status: 'PENDING',
             payout_type: 'full',
             created_at: nowIso
           });
-          if (insErr) {
-            console.error("[persistEscrowPayment] Supabase transaction insert error:", insErr);
-          }
+          if (insErr) { console.error('[persistEscrowPayment] Supabase transaction insert error:', insErr); dealUpdateError = JSON.stringify(insErr); }
         }
 
         if (validDealId) {
@@ -1204,9 +1126,7 @@ export function setupPaymentRoutes(
             console.warn("[persistEscrowPayment] Could not insert payment_secured message:", mErr);
           }
         }
-      } catch (dbErr) {
-        console.error("[persistEscrowPayment] DB update exception:", dbErr);
-      }
+      } catch (dbErr) { console.error('[persistEscrowPayment] DB update exception:', dbErr); dealUpdateError = String(dbErr); }
     }
 
     const db = getDb();

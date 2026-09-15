@@ -479,15 +479,15 @@ export default function BrandOnboardingFlow({ user, onComplete }) {
                    />
                    
                                       {/* Agency Registration Checkbox Option */}
-                   <label className="flex items-center gap-3 cursor-pointer group mt-1 p-3 border border-[var(--border-subtle)] rounded-xl hover:border-blue-500/50 transition-colors bg-[var(--bg-secondary)]/50">
-                     <div className={`w-5 h-5 rounded flex items-center justify-center border transition-all ${
+                   <label className="flex items-center gap-3 cursor-pointer group mt-2 p-3 border border-gray-200 dark:border-gray-800 rounded-xl hover:border-blue-500/50 transition-colors bg-gray-50/50 dark:bg-gray-800/50">
+                     <div className={`w-5 h-5 rounded md:rounded-md flex items-center justify-center border transition-all ${
                          Boolean(formData.isAgency)
-                           ? "bg-blue-600 border-blue-600 shadow-sm"
-                           : "bg-[var(--bg-base)] border-[var(--border-strong)]"
+                           ? "bg-blue-600 border-blue-600 text-white shadow-sm"
+                           : "bg-white dark:bg-gray-900 border-gray-300 dark:border-gray-700"
                        }`}
                      >
                        {Boolean(formData.isAgency) && (
-                         <svg className="w-3.5 h-3.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                         <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
                          </svg>
                        )}
@@ -498,7 +498,7 @@ export default function BrandOnboardingFlow({ user, onComplete }) {
                        checked={Boolean(formData.isAgency)}
                        onChange={e => setFormData({ ...formData, isAgency: e.target.checked, agencyType: e.target.checked ? formData.agencyType : "" })}
                      />
-                     <span className="text-xs sm:text-sm font-semibold text-[var(--text-primary)] group-hover:text-blue-500 transition-colors leading-none">
+                     <span className="text-sm font-medium text-gray-700 dark:text-gray-300 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors leading-none">
                        Registering as an Agency
                      </span>
                    </label>

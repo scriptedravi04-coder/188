@@ -89,7 +89,7 @@ export default function AgreementSign({ thread, onClose, onSigned }) {
 
   const handleSign = async (e) => {
     e.preventDefault();
-    if (otp !== generatedOtp && otp !== '123456') {
+    if (otp !== generatedOtp) {
       toast.error("Invalid verification code. Please check your OTP and try again.");
       return;
     }

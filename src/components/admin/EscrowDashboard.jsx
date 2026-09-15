@@ -140,6 +140,7 @@ export default function EscrowDashboard({ refreshTrigger }) {
   const isTxApprovedByBrand = (tx) => {
     if (isTxDisbursed(tx) || isTxRefunded(tx)) return false;
     return (
+      tx.payout_requested === true ||
       tx.is_brand_approved === true ||
       tx.payout_status === 'READY_FOR_RELEASE' ||
       tx.payout_status === 'PAYOUT_PENDING_ADMIN' ||

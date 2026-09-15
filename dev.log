@@ -1,0 +1,4 @@
+
+> react-example@0.0.0 dev
+> NODE_OPTIONS="--expose-gc" npx tsx backend/server.ts
+

@@ -84,12 +84,12 @@ export default function SlaAgreementOtpModal({ deal, onClose, onSigned }) {
   };
 
   const handleExecuteSign = async () => {
-    if (!otpSent && otpCode !== "123456") {
+    if (!otpSent) {
       toast.error("Please click 'Send OTP' first.");
       return;
     }
-    if (otpCode !== generatedOtp && otpCode !== "123456") {
-      toast.error("Invalid OTP code. Use code " + (generatedOtp || "123456"));
+    if (otpCode !== generatedOtp) {
+      toast.error("Invalid OTP code.");
       return;
     }
 
@@ -330,7 +330,7 @@ export default function SlaAgreementOtpModal({ deal, onClose, onSigned }) {
                 {otpSent && (
                   <div className="text-[10px] text-emerald-600 bg-emerald-500/10 p-2.5 rounded-xl border border-emerald-500/20 font-mono font-bold flex items-center justify-between">
                     <span>✓ OTP dispatched to {phone}</span>
-                    <span className="text-[var(--violet)]">Test Code: {generatedOtp || "123456"}</span>
+                    <span className="text-[var(--violet)]">Test Code: {generatedOtp}</span>
                   </div>
                 )}
               </motion.div>

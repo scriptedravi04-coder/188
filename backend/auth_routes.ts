@@ -391,11 +391,8 @@ export function setupAuthRoutes(
         user = db.users.find((u: any) => u.email && u.email.toLowerCase() === cleanInput);
       }
 
+      let isAutoCreated = false;
       if (!user) {
-        // SECURITY: never silently auto-create an account here. Login must only
-        // succeed for an email that has actually gone through /auth/signup (or
-        // Google sign-in). Auto-creating a fresh 'creator' account for any
-        // unrecognized email+password let anyone log in without ever signing up.
         return res.status(401).json({ detail: "Invalid email or password", code: "INVALID_CREDENTIALS" });
       }
 
@@ -446,31 +443,9 @@ export function setupAuthRoutes(
         }
       }
 
-      // SECURITY: if this account has no password set yet (e.g. it was created via
-      // Google sign-in and the owner never set a password), we must NOT silently
-      // accept whatever password was typed and set it as the new password — that
-      // let anyone who merely knew a real user's email take over their account.
-      // Tell them to use Google sign-in or the "forgot password" flow instead.
+      // If user has no password set (e.g. they signed up with Google), they must use Google login or reset password
       if (!isMatch && !user.password_hash) {
-        return res.status(401).json({
-          detail: "This account doesn't have a password set. Please sign in with Google, or use 'Forgot password' to set one.",
-          code: "NO_PASSWORD_SET"
-        });
-      }
-
-      // If workspace developer/owner account (commonusegovind@gmail.com or commonuseforpro@gmail.com) logs in, allow seamless password update on login
-      if (!isMatch && (cleanInput === 'commonusegovind@gmail.com' || cleanInput === 'commonuseforpro@gmail.com')) {
-        isMatch = true;
-        try {
-          const salt = await bcrypt.genSalt(10);
-          const newHash = await bcrypt.hash(password, salt);
-          user.password_hash = newHash;
-          if (supabase) {
-            try {
-              await (privilegedSupabase || supabase).from('users').update({ password_hash: newHash }).eq('user_id', user.user_id);
-            } catch (e) {}
-          }
-        } catch (e) {}
+        return res.status(401).json({ detail: "Please log in using Google, or reset your password.", code: "INVALID_CREDENTIALS" });
       }
 
       if (!isMatch) {
@@ -674,9 +649,8 @@ export function setupAuthRoutes(
       }
 
       const isMatch = await bcrypt.compare(otp.trim(), token.otp_hash);
-      const isBypass = (!process.env.RESEND_API_KEY && otp.trim() === '123456');
 
-      if (!isMatch && !isBypass) {
+      if (!isMatch) {
         await dbClient.from('password_reset_tokens').update({ attempt_count: token.attempt_count + 1 }).eq('id', token.id);
         return res.status(400).json({ detail: "Invalid 6-digit code. Please check and try again." });
       }
@@ -1370,8 +1344,7 @@ export function setupAuthRoutes(
         .maybeSingle();
 
       if (!user) {
-        // Return success even if user doesn't exist for security reasons
-        return res.json({ success: true, message: "If that email is in our database, we will send a password reset link." });
+        return res.status(404).json({ detail: "No account found with this email address." });
       }
 
       // Generate a 6-digit OTP using crypto

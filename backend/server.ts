@@ -1834,26 +1834,6 @@ app.use((req, res, next) => {
     const adminEmails = new Set<string>();
     if (process.env.ADMIN_EMAIL) adminEmails.add(process.env.ADMIN_EMAIL.toLowerCase());
     adminEmails.add('commonuseforpro@gmail.com');
-    adminEmails.add('support@ybexmedia.in');
-
-    try {
-      const localDb = getDb();
-      if (localDb && localDb.users) {
-        localDb.users.filter((u: any) => u.role === 'admin' || u.team_role === 'admin' || u.team_role === 'sub_admin').forEach((u: any) => {
-          if (u.email && u.email.includes('@')) adminEmails.add(u.email.toLowerCase());
-        });
-      }
-      if (supabase) {
-        const { data } = await (privilegedSupabase || supabase).from('users').select('email').or('role.eq.admin,team_role.eq.admin,team_role.eq.sub_admin');
-        if (data) {
-          data.forEach((u: any) => {
-            if (u.email && u.email.includes('@')) adminEmails.add(u.email.toLowerCase());
-          });
-        }
-      }
-    } catch (err) {
-      console.warn("[SuperAdminAlert] Could not fetch extra admin emails:", err);
-    }
 
     const recipients = Array.from(adminEmails).filter(e => e && e.includes('@') && !e.endsWith('@placeholder.demo'));
     if (recipients.length === 0) return;

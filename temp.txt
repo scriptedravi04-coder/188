@@ -1,0 +1,18 @@
+
+            {isBrand ? (
+              <button
+                type="button"
+                onClick={() => {
+                  setShowPaymentSheet(true);
+                  setShowUploadSheet(false);
+                }}
+                className={`px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer ${
+                  showPaymentSheet
+                    ? "bg-gray-950 text-white dark:bg-white dark:text-gray-950 shadow-xs"
+                    : "bg-gray-100 dark:bg-neutral-800 text-gray-700 dark:text-gray-300"
+                }`}
+              >
+                <CreditCard size={13} />
+                <span>Make payment</span>
+                {!isPaymentFunded ? (
+                  <span className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse shrink-0" />

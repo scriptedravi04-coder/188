@@ -453,7 +453,7 @@ export default function CreatorDashboard({ user: propUser }) {
     if (displayBanners.length <= 1) return;
     const interval = setInterval(() => {
       setCurrentBannerIdx(prev => (prev + 1) % displayBanners.length);
-    }, 60000);
+    }, 6000);
     return () => clearInterval(interval);
   }, [displayBanners.length]);
 
@@ -600,7 +600,7 @@ export default function CreatorDashboard({ user: propUser }) {
                  className={`absolute inset-0 transition-opacity duration-700 ${idx === currentBannerIdx ? 'opacity-100 z-10' : 'opacity-0 z-0 pointer-events-none'}`}
                >
                  <img 
-                   src={banner.imgUrl || banner.image} 
+                   src={banner.image_url || banner.imgUrl || banner.image} 
                    alt={banner.title || "Banner"} 
                    className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-700" 
                    referrerPolicy="no-referrer"

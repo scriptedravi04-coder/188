@@ -22,6 +22,7 @@ export default function BannerManager() {
   });
   const [file, setFile] = useState(null);
   const [preview, setPreview] = useState(null);
+  const [bannerToDelete, setBannerToDelete] = useState(null);
   const fileInputRef = useRef(null);
 
   useEffect(() => {
@@ -31,7 +32,7 @@ export default function BannerManager() {
   const fetchBanners = async () => {
     try {
       const { data } = await api.get('admin/banners', { bypassCache: true });
-      setBanners(Array.isArray(data) ? data : []);
+      console.log("FETCH BANNERS DATA:", data); setBanners(Array.isArray(data) ? data : []);
     } catch (e) {
       console.warn("Failed to fetch banners", e);
     }
@@ -170,13 +171,16 @@ export default function BannerManager() {
     }
   };
 
-  const handleDelete = async (bannerOrId) => {
+  const confirmDelete = (bannerOrId) => setBannerToDelete(bannerOrId);
+  const handleDelete = async () => {
+    const bannerOrId = bannerToDelete;
+    setBannerToDelete(null);
     const bannerId = typeof bannerOrId === 'object' ? (bannerOrId?.id || bannerOrId?._id || bannerOrId?.banner_id) : bannerOrId;
     if (!bannerId) {
       toast.error("Invalid Banner ID");
       return;
     }
-    if (!window.confirm("Delete this banner?")) return;
+
 
     // Optimistically update UI so banner card disappears immediately
     setBanners(prev => prev.filter(b => (b.id !== bannerId && b._id !== bannerId && b.banner_id !== bannerId)));
@@ -253,7 +257,7 @@ export default function BannerManager() {
                         <Edit3 size={16}/>
                       </button>
                       <button 
-                        onClick={() => handleDelete(b)} 
+                        onClick={() => confirmDelete(b)} 
                         className="text-red-400 hover:text-red-300 transition-colors p-2 bg-red-400/10 rounded-lg"
                         title="Delete Banner"
                       >
@@ -269,6 +273,22 @@ export default function BannerManager() {
              </div>
           )}
        </div>
+
+       {bannerToDelete && (
+          <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+             <div className="bg-[var(--bg-card)] border border-[var(--border-default)] w-full max-w-sm rounded-2xl overflow-hidden shadow-2xl p-6 text-center">
+                <div className="w-12 h-12 bg-red-100 text-red-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                   <Trash2 size={24} />
+                </div>
+                <h3 className="text-lg font-bold mb-2">Delete Banner?</h3>
+                <p className="text-[var(--text-secondary)] text-sm mb-6">Are you sure you want to delete this banner? This action cannot be undone.</p>
+                <div className="flex gap-3">
+                   <button onClick={() => setBannerToDelete(null)} className="flex-1 py-2 rounded-xl font-medium bg-[var(--bg-elevated)] text-[var(--text-primary)] hover:bg-[var(--border-default)] transition-colors">Cancel</button>
+                   <button onClick={handleDelete} className="flex-1 py-2 rounded-xl font-medium bg-red-500 text-white hover:bg-red-600 transition-colors">Delete</button>
+                </div>
+             </div>
+          </div>
+       )}
 
        {showUploadModal && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">

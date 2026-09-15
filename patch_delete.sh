@@ -1,0 +1,1 @@
+sed -i 's/  const handleDelete = async (bannerOrId) => {/  const confirmDelete = (bannerOrId) => setBannerToDelete(bannerOrId);\n  const handleDelete = async () => {\n    const bannerOrId = bannerToDelete;\n    setBannerToDelete(null);/g' src/components/admin/BannerManager.jsx

@@ -160,8 +160,8 @@ export default function ChatBox({ thread, user: propUser, onlineUsers = [], onBa
     ['ESCROW_HELD', 'PAID', 'RELEASED', 'COMPLETED'].includes(currentThread?.payment_status?.toUpperCase()) ||
     ['ESCROW_HELD', 'PAID', 'RELEASED', 'COMPLETED'].includes(currentThread?.deal?.payment_status?.toUpperCase()) ||
     ['ESCROW_HELD', 'PAID', 'RELEASED', 'COMPLETED'].includes(currentThread?.ugc_order?.payment_status?.toUpperCase()) ||
-    ['SUBMITTED', 'CONTENT_SUBMITTED', 'COMPLETED', 'APPROVED'].includes(rawStatus) ||
-    ['SUBMITTED', 'CONTENT_SUBMITTED', 'COMPLETED', 'APPROVED'].includes(flowState) ||
+    ['SUBMITTED', 'CONTENT_SUBMITTED', 'COMPLETED', 'APPROVED', 'IN_PROGRESS', 'ACCEPTED', 'REVISION_REQUESTED', 'CHANGES_DECLINED', 'CONTENT_APPROVED', 'LIVE_LINKS_SUBMITTED', 'LIVE_LINK_REVISION', 'LIVE_LINKS_APPROVED'].includes(rawStatus) ||
+    ['SUBMITTED', 'CONTENT_SUBMITTED', 'COMPLETED', 'APPROVED', 'IN_PROGRESS', 'ACCEPTED', 'REVISION_REQUESTED', 'CHANGES_DECLINED', 'CONTENT_APPROVED', 'LIVE_LINKS_SUBMITTED', 'LIVE_LINK_REVISION', 'LIVE_LINKS_APPROVED'].includes(flowState) ||
     hasCompletedMessage ||
     Boolean(currentThread?.utr_number || currentThread?.transaction?.utr_number) ||
     (isUgcOrder && currentThread?.ugc_brief_id && currentThread?.payment_funded !== false) ||
@@ -250,6 +250,12 @@ export default function ChatBox({ thread, user: propUser, onlineUsers = [], onBa
     ["CONTENT_SUBMITTED", "SUBMITTED", "UNDER_REVIEW", "IN_REVIEW", "DELIVERED", "PENDING_REVIEW"].includes(ugcStatus) ||
     ["CONTENT_SUBMITTED", "SUBMITTED", "UNDER_REVIEW", "IN_REVIEW"].includes(flowState) ||
     Boolean(currentThread?.submitted_video_url || currentThread?.ugc_order?.video_url || currentThread?.video_url)
+  );
+
+  const isLiveLinksSubmitted = !isDealCompleted && (
+    ["LIVE_LINKS_SUBMITTED", "LINKS_SUBMITTED", "LINKS_UNDER_REVIEW"].includes(rawStatus) ||
+    ["LIVE_LINKS_SUBMITTED", "LINKS_SUBMITTED", "LINKS_UNDER_REVIEW"].includes(ugcStatus) ||
+    Boolean(currentThread?.live_link_url || currentThread?.ugc_order?.live_link_url || currentThread?.deal?.live_link_url)
   );
 
   const showTabs = !isDealCompleted;
@@ -2206,7 +2212,7 @@ export default function ChatBox({ thread, user: propUser, onlineUsers = [], onBa
                 }`}
               >
                 <CreditCard size={13} />
-                <span>Make payment</span>
+                <span>{!isPaymentFunded ? "Make payment" : isDealCompleted ? "Deal Completed" : isLiveLinksSubmitted ? "Review Live Links" : isContentApproved ? "Waiting for Live Link" : isRevisionDeclined ? "Changes Declined" : isRevisionRequested ? "Waiting for changes" : isContentSubmitted ? "Review Content" : "Waiting for Content"}</span>
                 {!isPaymentFunded ? (
                   <span className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse shrink-0" />
                 ) : (

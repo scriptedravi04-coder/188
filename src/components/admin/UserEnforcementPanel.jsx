@@ -1529,17 +1529,17 @@ export default function UserEnforcementPanel({ user: initialUser, onBack, onUser
                      placeholder={user.name}
                     className="w-full bg-gray-50 border border-red-200 rounded-xl p-3 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-red-200 focus:border-red-400 mb-3"
                  />
-                 <label className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1 block">Enter OTP (123456)</label>
+                 <label className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1 block">Enter confirmation (DELETE)</label>
                  <input 
                      type="text" 
                      value={deleteOtp} 
                      onChange={e=>setDeleteOtp(e.target.value)} 
-                     placeholder="123456"
+                     placeholder="DELETE"
                     className="w-full bg-gray-50 border border-red-200 rounded-xl p-3 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-red-200 focus:border-red-400"
                  />
               </div>
               <button 
-                  disabled={banConfirmText.trim().toLowerCase() !== (user.name || '').trim().toLowerCase() || deleteOtp !== '123456'}
+                  disabled={banConfirmText.trim().toLowerCase() !== (user.name || '').trim().toLowerCase() || deleteOtp !== 'DELETE'}
                  onClick={() => { handleAction('delete', {}); setBanConfirmText(''); setDeleteOtp(''); }}
                  className="w-full py-3 bg-red-600 hover:bg-red-700 text-white font-extrabold rounded-xl flex items-center justify-center gap-2 transition-colors disabled:opacity-50 shadow-sm cursor-pointer"
               >

@@ -1218,16 +1218,16 @@ export default function SystemMessage({
                       </button>
                     </div>
 
-                    {/* 3: Approve & Release (Large Full-Width Green Button) */}
+                    {/* 3: Approve Last Submission (Full-Width Green Button) */}
                     <button
                       type="button"
                       onClick={handleApproveLiveLinks}
                       disabled={loadingAction}
-                      className="w-full py-3 px-4 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-black uppercase tracking-wider rounded-xl transition-all shadow-md shadow-emerald-600/15 flex items-center justify-center gap-2 cursor-pointer active:scale-98"
-                      title="Accept submitted links and complete the escrow release"
+                      className="w-full mt-2.5 py-3 px-4 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-black uppercase tracking-wider rounded-xl transition-all shadow-md shadow-emerald-600/15 flex items-center justify-center gap-2 cursor-pointer active:scale-98"
+                      title="Accept the previously submitted links and complete the escrow release"
                     >
                       {loadingAction ? <Loader2 size={14} className="animate-spin" /> : <CheckCircle size={16} />}
-                      <span className="truncate">Approve & Release Payout</span>
+                      <span className="truncate">Approve Last Submission</span>
                     </button>
                   </motion.div>
                 ) : (

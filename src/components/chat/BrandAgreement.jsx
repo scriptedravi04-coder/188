@@ -45,14 +45,14 @@ export default function BrandAgreement({ thread, onClose, onSigned }) {
     setStep('otp');
     
     toast.success("INFLUISH Secure Verification Code Sent!", {
-      description: `Your OTP is ${code} (Demo/Testing code '123456' is also supported)`,
+      description: `Your OTP is ${code}`,
       duration: 15000,
     });
   };
 
   const handleSign = async (e) => {
     e.preventDefault();
-    if (otp !== generatedOtp && otp !== '123456') {
+    if (otp !== generatedOtp) {
       toast.error("Invalid verification code. Please check your OTP and try again.");
       return;
     }

@@ -540,11 +540,11 @@ export default function ContentProofNotice({ message, isUserBrand, threadId, thr
                     onClick={handleApprove}
                     disabled={loading}
                     className="w-full py-3 px-4 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-black uppercase tracking-wider rounded-xl transition-all shadow-md shadow-emerald-600/15 flex items-center justify-center gap-2 cursor-pointer active:scale-98"
-                    title="Accept deliverable draft and release escrow payout"
+                    title="Accept deliverable draft"
                   >
                     {loading ? <Loader2 size={15} className="animate-spin" /> : <CheckCircle size={16} />}
                     <span className="truncate">
-                      Approve & Release Payout {amountVal ? `(₹${Number(amountVal).toLocaleString('en-IN')})` : ''}
+                      Approve Draft {amountVal ? `(₹${Number(amountVal).toLocaleString('en-IN')})` : ''}
                     </span>
                   </button>
                 </motion.div>

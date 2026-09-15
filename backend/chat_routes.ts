@@ -479,4 +479,46 @@ export function setupChatCoreRoutes(
     res.json({ success: true });
   });
 
+
+  router.post("/chat/v2/threads/:threadId/submit-review", async (req, res) => {
+    const user = await parseAuthUser(req);
+    if (!user) return res.status(403).json({ error: "Unauthorized" });
+    const { threadId } = req.params;
+    const { rating, communication_rating, timeliness_rating, quality_rating, comment } = req.body;
+
+    try {
+      if (supabase) {
+        // Find the thread
+        const { data: thread } = await supabase.from('chat_threads').select('*').eq('id', threadId).single();
+        
+        let targetId = null;
+        if (thread) {
+          if ((user.user_id || user.id) === thread.creator_id) targetId = thread.brand_id;
+          else if ((user.user_id || user.id) === thread.brand_id) targetId = thread.creator_id;
+        }
+
+        const reviewData = {
+          reviewer_id: user.user_id || user.id,
+          target_id: targetId,
+          thread_id: threadId,
+          deal_id: thread?.deal_id,
+          ugc_order_id: thread?.ugc_order_id,
+          rating,
+          communication_rating,
+          timeliness_rating,
+          quality_rating,
+          comment,
+          created_at: new Date().toISOString()
+        };
+        await supabase.from('reviews').insert(reviewData).select();
+        
+        // Also update the thread to mark review as submitted if needed
+      }
+
+      res.json({ success: true });
+    } catch (e) {
+      console.error("[POST /chat/v2/threads/:threadId/submit-review] Error:", e);
+      res.status(500).json({ error: "Failed to submit review" });
+    }
+  });
 }
