@@ -1,0 +1,231 @@
+{
+  "users": [
+    {
+      "user_id": "user_admin_demo",
+      "email": "admin@ybex.demo",
+      "name": "Ybex General Admin",
+      "role": "admin",
+      "picture": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100",
+      "auth_method": "seed",
+      "onboarded": true,
+      "created_at": "2026-09-25T05:53:05.424Z",
+      "email_verified": true,
+      "verified": true,
+      "kyc_status": "approved",
+      "phone": "",
+      "agency_badge_claimed": false
+    },
+    {
+      "user_id": "user_admin_ybexmedia",
+      "email": "info@ybexmedia.com",
+      "name": "YbexMedia Admin",
+      "role": "admin",
+      "picture": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100",
+      "auth_method": "seed",
+      "onboarded": true,
+      "created_at": "2026-09-25T05:53:05.424Z",
+      "email_verified": true,
+      "verified": true,
+      "kyc_status": "approved",
+      "phone": "",
+      "agency_badge_claimed": false
+    },
+    {
+      "user_id": "user_violator_creator",
+      "email": "rahul.sharma@example.com",
+      "name": "Rahul Sharma (Creator)",
+      "role": "creator",
+      "picture": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100",
+      "auth_method": "seed",
+      "onboarded": true,
+      "created_at": "2026-09-25T05:53:05.424Z",
+      "email_verified": true,
+      "verified": true,
+      "kyc_status": "pending",
+      "phone": "9812345678",
+      "agency_badge_claimed": false
+    },
+    {
+      "user_id": "user_violator_brand",
+      "email": "deals@skylinebrands.co",
+      "name": "Skyline Agencies (Brand)",
+      "role": "brand",
+      "picture": "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=100",
+      "auth_method": "seed",
+      "onboarded": true,
+      "created_at": "2026-09-25T05:53:05.424Z",
+      "email_verified": true,
+      "verified": true,
+      "kyc_status": "pending",
+      "phone": "",
+      "agency_badge_claimed": false
+    }
+  ],
+  "user_sessions": [],
+  "user_plain_passwords": {},
+  "creator_profiles": [],
+  "brand_profiles": [],
+  "campaigns": [],
+  "waves": [],
+  "collabs": [],
+  "verifications": [],
+  "waitlist": [],
+  "reports": [],
+  "notifications": [],
+  "platform_settings": {
+    "brand_markup_pct": 2,
+    "creator_deduction_pct": 2,
+    "agency_markup_pct": 5,
+    "agency_deduction_pct": 5,
+    "ai_review_enabled": false
+  },
+  "chat_messages": [],
+  "campaign_performance": [],
+  "files": [],
+  "ugc_orders": [],
+  "team_activity_logs": [],
+  "creator_payment_methods": [],
+  "transactions": [],
+  "fee_configs": [
+    {
+      "id": 1,
+      "threshold_amount": 20000,
+      "below_threshold_rate": 15,
+      "above_threshold_rate": 5,
+      "gst_rate": 18
+    }
+  ],
+  "chat_threads": [],
+  "deal_offers": [],
+  "message_flags": [],
+  "user_violations": [],
+  "saved_creators": [],
+  "collab_cost_requests": [],
+  "brief_requests": [],
+  "creator_portfolio": [],
+  "collab_proof_submissions": [],
+  "invoice_clients": [],
+  "invoice_billing_profile": [],
+  "creator_reviews": [],
+  "invoices": [],
+  "ugc_briefs": [],
+  "ugc_deliveries": [],
+  "ugc_showcase": [],
+  "ugc_reviews": [],
+  "earnings": [],
+  "banners": [
+    {
+      "id": "banner-ugc-boat",
+      "title": "boAt Rockerz ANC Series",
+      "description": "Produce premium UGC for the new active noise cancelling series. Earn up to ₹25,000.",
+      "tag": "HIGH BUDGET",
+      "brand": "boAt Lifestyle",
+      "type": "Influencer",
+      "status": "Live",
+      "placement": "Dashboard Hero Carousel",
+      "link": "/creator/ugc?tab=explore",
+      "image": "https://images.unsplash.com/photo-1546435770-a3e426bf472b?q=80&w=800&auto=format&fit=crop",
+      "color": "#7C3AED",
+      "created_at": "2026-09-25T05:53:05.424Z"
+    },
+    {
+      "id": "banner-nike-pegasus",
+      "title": "Nike Pegasus 40 Launch",
+      "description": "Review & style the ultimate running shoes in your aesthetic. Receive free footwear + payout.",
+      "tag": "TRENDING",
+      "brand": "Nike India",
+      "type": "Influencer",
+      "status": "Live",
+      "placement": "Dashboard Hero Carousel",
+      "link": "/campaigns",
+      "image": "https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?q=80&w=800&auto=format&fit=crop",
+      "color": "#059669",
+      "created_at": "2026-09-25T05:53:05.424Z"
+    }
+  ],
+  "admin_auth_logs": [],
+  "admin_activity_logs": [],
+  "blocked_message_attempts": [],
+  "chat_violations": [
+    {
+      "id": "v_seed_1",
+      "conversation_id": "thread_seed_1",
+      "sender_id": "user_violator_creator",
+      "sender_role": "creator",
+      "message_content_attempted": "Let's deal directly, call me on 9812345678.",
+      "violation_type": "hard_number",
+      "detected_at": "2026-09-24T05:53:05.424Z"
+    },
+    {
+      "id": "v_seed_2",
+      "conversation_id": "thread_seed_1",
+      "sender_id": "user_violator_creator",
+      "sender_role": "creator",
+      "message_content_attempted": "Sending my contact. Message me: +919812345678",
+      "violation_type": "hard_number",
+      "detected_at": "2026-09-24T06:53:05.424Z"
+    },
+    {
+      "id": "v_seed_3",
+      "conversation_id": "thread_seed_2",
+      "sender_id": "user_violator_brand",
+      "sender_role": "brand",
+      "message_content_attempted": "Can you send your WhatsApp number to arrange the call?",
+      "violation_type": "soft_keyword",
+      "detected_at": "2026-09-25T00:53:05.424Z"
+    },
+    {
+      "id": "v_seed_4",
+      "conversation_id": "thread_seed_1",
+      "sender_id": "user_violator_creator",
+      "sender_role": "creator",
+      "message_content_attempted": "Okay, ping me outside this app on telegram.",
+      "violation_type": "soft_keyword",
+      "detected_at": "2026-09-25T01:53:05.424Z"
+    }
+  ],
+  "master_tags": [],
+  "entity_tags": [],
+  "support_tickets": [],
+  "ticket_messages": [],
+  "app_versions": [],
+  "warning_templates": [
+    {
+      "template_id": "warn_off_platform",
+      "name": "Off-Platform Communication / Payment Attempt",
+      "subtype": "warning",
+      "text": "Attempting to take communication or payments outside of the platform is a violation of Ybex Terms of Service."
+    },
+    {
+      "template_id": "warn_missed_deadline",
+      "name": "Repeated Missed Deliverable Deadlines",
+      "subtype": "warning",
+      "text": "You have failed to submit deliverables within the agreed-upon timeline without prior communication."
+    },
+    {
+      "template_id": "warn_inappropriate_conduct",
+      "name": "Unprofessional or Inappropriate Conduct",
+      "subtype": "warning",
+      "text": "Your recent messages or behavior violate our community guidelines regarding professional conduct."
+    },
+    {
+      "template_id": "warn_content_guidelines",
+      "name": "Deliverable Quality / Policy Non-Compliance",
+      "subtype": "warning",
+      "text": "Content submitted does not adhere to platform quality benchmarks or brand brief guidelines."
+    },
+    {
+      "template_id": "warn_spam_unsolicited",
+      "name": "Spam or Unsolicited Promotional Outreach",
+      "subtype": "warning",
+      "text": "Sending unsolicited spam or excessive direct solicitations to users is strictly prohibited."
+    }
+  ],
+  "referral_config": {
+    "creator_referral_reward": 500,
+    "brand_referral_reward": 1000,
+    "referral_trigger_action": "first_completed_collab",
+    "referral_monthly_cap": 10,
+    "referral_enabled": true
+  }
+}
